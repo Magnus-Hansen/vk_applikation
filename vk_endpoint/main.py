@@ -65,7 +65,7 @@ async def update_varsling(kriterie: model.Kriterie, conn=Depends(get_db)):
 
 
 @app.put("/upload", status_code=200)
-async def update_upload(upload: model.Upload, conn=Depends(get_db)):
+async def update_upload(upload: model.Upload_get, conn=Depends(get_db)):
     try:
         results = Update.upload(upload, conn)
         conn.commit()
