@@ -1,5 +1,5 @@
 from app.services import Create
-from vk_endpoint.app.model import Kriterie, Dkhype, Vandstand
+from app.model import Kriterie, Dkhype, Vandstand
 import pytest
 
 

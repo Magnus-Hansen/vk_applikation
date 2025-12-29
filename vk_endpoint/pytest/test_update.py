@@ -1,5 +1,5 @@
 from app.services import Create, Update
-from vk_endpoint.app.model import Kriterie, Dkhype, Vandstand, Upload
+from app.model import Kriterie, Dkhype, Vandstand, Upload
 import pytest
 
 kriterie1 = Kriterie(

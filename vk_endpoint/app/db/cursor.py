@@ -1,4 +1,4 @@
-from app.db.connection import get_conn, put_conn
+from db.connection import get_conn, put_conn
 from fastapi import Depends
 
 # Connection dependency
