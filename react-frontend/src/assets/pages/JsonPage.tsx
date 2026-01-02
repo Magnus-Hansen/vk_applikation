@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { validateKriterie } from "../../utils/kriterieValidation";
 
 const API_BASE = "http://localhost:8000"; // ← change if needed
@@ -7,6 +7,26 @@ export default function JsonPage() {
   const [text, setText] = useState("");
   const [message, setMessage] = useState("");
   const [note, setNote] = useState("");
+  const [sommer, setSommer] = useState<boolean | null>(null);
+
+  // Re-validate when season selection changes
+  useEffect(() => {
+    if (text && message.includes("valid")) {
+      try {
+        const jsonData = JSON.parse(text);
+        const validation = validateKriterie(jsonData);
+        if (validation.valid) {
+          if (sommer === null) {
+            setMessage("⚠️ JSON is valid. Please select season before sending.");
+          } else {
+            setMessage("✅ JSON is valid and ready to send!");
+          }
+        }
+      } catch {
+        // Keep existing error message
+      }
+    }
+  }, [sommer, text, message]);
 
   // Called when a file is uploaded
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +52,11 @@ export default function JsonPage() {
       return;
     }
 
-    setMessage("✅ JSON is valid!");
+    if (sommer === null) {
+      setMessage("⚠️ JSON is valid. Please select season before sending.");
+    } else {
+      setMessage("✅ JSON is valid and ready to send!");
+    }
   };
 
   // Called when user clicks "Send to server"
@@ -44,11 +68,17 @@ export default function JsonPage() {
       return;
     }
 
+    if (sommer === null) {
+      setMessage("❌ Please select season (Summer/Winter).");
+      return;
+    }
+
     let jsonData;
     try {
       const parsedData = JSON.parse(text);
       jsonData = {
         note: note,
+        sommer: sommer,
         kriterier: parsedData
       };
       //jsonData = JSON.parse(text);
@@ -104,6 +134,32 @@ export default function JsonPage() {
         />
       </div>
 
+      <div style={{ marginTop: 15 }}>
+        <label style={{ fontWeight: "bold", display: "block", marginBottom: "8px" }}>
+          Season: <span style={{ color: "red" }}>*</span>
+        </label>
+        <label style={{ marginRight: 20, cursor: "pointer" }}>
+          <input
+            type="radio"
+            name="season"
+            checked={sommer === true}
+            onChange={() => setSommer(true)}
+            style={{ marginRight: "6px" }}
+          />
+          Summer
+        </label>
+        <label style={{ cursor: "pointer" }}>
+          <input
+            type="radio"
+            name="season"
+            checked={sommer === false}
+            onChange={() => setSommer(false)}
+            style={{ marginRight: "6px" }}
+          />
+          Winter
+        </label>
+      </div>
+
       {text && (
         <>
           <h2>Edit JSON</h2>
@@ -120,8 +176,10 @@ export default function JsonPage() {
                 const validation = validateKriterie(jsonData);
                 if (!validation.valid) {
                   setMessage(`❌ Validation errors:\n${validation.errors.join('\n')}`);
+                } else if (sommer === null) {
+                  setMessage("⚠️ JSON is valid. Please select season before sending.");
                 } else {
-                  setMessage("✅ JSON is valid!");
+                  setMessage("✅ JSON is valid and ready to send!");
                 }
               } catch {
                 setMessage("❌ Invalid JSON syntax.");
