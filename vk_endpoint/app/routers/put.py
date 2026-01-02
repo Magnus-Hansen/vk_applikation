@@ -6,6 +6,7 @@ from db import cursor
 
 router = APIRouter()
 
+
 @router.put("/varsling", status_code=200)
 async def update_varsling(kriterie: model.Kriterie, conn=Depends(cursor.get_db)):
     try:

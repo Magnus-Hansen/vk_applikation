@@ -5,6 +5,7 @@ from db import cursor
 
 router = APIRouter()
 
+
 @router.delete("/{upload_id}", status_code=200)
 async def delete_upload(upload_id: int, conn=Depends(cursor.get_db)):
     try:

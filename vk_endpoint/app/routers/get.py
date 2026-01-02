@@ -5,6 +5,7 @@ from db import cursor
 
 router = APIRouter()
 
+
 @router.get("/all", status_code=200)
 async def get_all_varslinger(conn=Depends(cursor.get_db)):
     return Get.all_varslinger(conn)

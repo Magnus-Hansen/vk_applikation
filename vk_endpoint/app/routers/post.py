@@ -6,6 +6,7 @@ from db import cursor
 
 router = APIRouter()
 
+
 @router.post("/", status_code=201)
 async def post_file(data: model.UploadRequest, conn=Depends(cursor.get_db)):
     try:

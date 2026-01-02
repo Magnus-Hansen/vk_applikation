@@ -1,6 +1,7 @@
 from db.connection import get_conn, put_conn
 from fastapi import Depends
 
+
 # Connection dependency
 def get_db():
     conn = get_conn()

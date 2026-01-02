@@ -119,18 +119,14 @@ class TestClassUpdate:
 
     def test_update_upload_no_sommer_fail(self, conn):
         with pytest.raises(Exception):
-            upload2 = Upload(
-                id="1", Datetime="2025-12-22", note="test", sommer=None
-            )
+            upload2 = Upload(id="1", Datetime="2025-12-22", note="test", sommer=None)
             Create.file(conn, None, False, [kriterie1])
             result = Update.upload(upload2, conn)
             assert result == {"upload_id": upload2.id}
 
     def test_update_upload_wrong_id(self, conn):
         with pytest.raises(Exception):
-            upload2 = Upload(
-                id="3", Datetime="2025-12-22", note="test", sommer=False
-            )
+            upload2 = Upload(id="3", Datetime="2025-12-22", note="test", sommer=False)
             Create.file(conn, None, False, [kriterie1])
             result = Update.upload(upload2, conn)
             assert result == {"upload_id": upload2.id}
