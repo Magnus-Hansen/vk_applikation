@@ -1,4 +1,4 @@
-from app.services import Create, Get
+from app.services import create, get
 from app.model import Kriterie, Dkhype, Vandstand, Upload
 import pytest
 import datetime
@@ -20,10 +20,10 @@ class TestClassDelete:
             ),
             station_id="88888888",
         )
-        Create.file(conn, None, False, [kriterie1])
-        Create.file(conn, None, False, [kriterie2])
+        create.file(conn, None, False, [kriterie1])
+        create.file(conn, None, False, [kriterie2])
         kriterie2.id = 2
-        assert Get.varslinger(conn) == [kriterie2]
+        assert get.varslinger(conn) == [kriterie2]
 
     def test_get_varslinger_fail(self, conn):
         with pytest.raises(Exception):
@@ -41,10 +41,10 @@ class TestClassDelete:
                 ),
                 station_id="88888888",
             )
-            Create.file(conn, None, False, [kriterie1])
-            Create.file(conn, None, False, [kriterie2])
+            create.file(conn, None, False, [kriterie1])
+            create.file(conn, None, False, [kriterie2])
             kriterie1.id = 1
-            assert Get.varslinger(conn) == [kriterie1]
+            assert get.varslinger(conn) == [kriterie1]
 
     def test_get_all_varslinger(self, conn):
         kriterie1 = Kriterie(
@@ -61,11 +61,11 @@ class TestClassDelete:
             ),
             station_id="88888888",
         )
-        Create.file(conn, None, False, [kriterie1])
-        Create.file(conn, None, False, [kriterie2])
+        create.file(conn, None, False, [kriterie1])
+        create.file(conn, None, False, [kriterie2])
         kriterie1.id = 1
         kriterie2.id = 2
-        assert Get.all_varslinger(conn) == [kriterie1, kriterie2]
+        assert get.all_varslinger(conn) == [kriterie1, kriterie2]
 
     def test_get_all_uploads(self, conn):
         kriterie1 = Kriterie(
@@ -82,13 +82,13 @@ class TestClassDelete:
             ),
             station_id="88888888",
         )
-        Create.file(conn, None, False, [kriterie1])
-        Create.file(conn, None, False, [kriterie2])
+        create.file(conn, None, False, [kriterie1])
+        create.file(conn, None, False, [kriterie2])
         dateTime = datetime.datetime.now()
         date = dateTime.date()
         upload1 = Upload(id=1, Datetime=date, note=None, sommer=False)
         upload2 = Upload(id=2, Datetime=date, note=None, sommer=False)
-        assert Get.all_uploads(conn) == [upload1, upload2]
+        assert get.all_uploads(conn) == [upload1, upload2]
 
     def test_get_upload(self, conn):
         kriterie1 = Kriterie(
@@ -105,12 +105,12 @@ class TestClassDelete:
             ),
             station_id="88888888",
         )
-        Create.file(conn, None, False, [kriterie1])
-        Create.file(conn, None, False, [kriterie2])
+        create.file(conn, None, False, [kriterie1])
+        create.file(conn, None, False, [kriterie2])
         dateTime = datetime.datetime.now()
         date = dateTime.date()
         upload2 = Upload(id=2, Datetime=date, note=None, sommer=False)
-        assert Get.upload(conn) == upload2
+        assert get.upload(conn) == upload2
 
     def test_get_upload_fail(self, conn):
         with pytest.raises(Exception):
@@ -128,9 +128,9 @@ class TestClassDelete:
                 ),
                 station_id="88888888",
             )
-            Create.file(conn, None, False, [kriterie1])
-            Create.file(conn, None, False, [kriterie2])
+            create.file(conn, None, False, [kriterie1])
+            create.file(conn, None, False, [kriterie2])
             dateTime = datetime.datetime.now()
             date = dateTime.date()
             upload1 = Upload(id=1, Datetime=date, note=None, sommer=False)
-            assert Get.upload(conn) == upload1
+            assert get.upload(conn) == upload1

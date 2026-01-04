@@ -3,5 +3,9 @@ dev = [
     "ruff>=0.14.10",
 ]
 
+[tool.ruff] 
+ignore = ["TRY300"]
+
+
 [tool.ruff.lint]
 select = ["ALL"]

@@ -1,26 +1,42 @@
-from fastapi import APIRouter
-from services import Get
-from fastapi import Depends
+"""Router til hentning af uploads og varslingskriterier."""
+
+from typing import Annotated
+
 from db import cursor
+from fastapi import APIRouter, Depends
+from psycopg2.extensions import connection
+from services import get
+
+from app.model import Kriterie, Upload
 
 router = APIRouter()
 
 
 @router.get("/all", status_code=200)
-async def get_all_varslinger(conn=Depends(cursor.get_db)):
-    return Get.all_varslinger(conn)
+async def get_all_varslinger(
+    conn: Annotated[connection, Depends(cursor.get_db)],
+) -> list[Kriterie]:
+    """Hent alle varslingskriterier uanset upload."""
+    return get.all_varslinger(conn)
 
 
 @router.get("/", status_code=200)
-async def get_varslinger(conn=Depends(cursor.get_db)):
-    return Get.varslinger(conn)
+async def get_varslinger(
+    conn: Annotated[connection, Depends(cursor.get_db)],
+) -> list[Kriterie]:
+    """Hent varslingskriterier for nyeste upload."""
+    return get.varslinger(conn)
 
 
 @router.get("/uploads", status_code=200)
-async def get_all_uploads(conn=Depends(cursor.get_db)):
-    return Get.all_uploads(conn)
+async def get_all_uploads(
+    conn: Annotated[connection, Depends(cursor.get_db)],
+) -> list[Upload]:
+    """Hent alle uploads."""
+    return get.all_uploads(conn)
 
 
 @router.get("/upload", status_code=200)
-async def get_upload(conn=Depends(cursor.get_db)):
-    return Get.upload(conn)
+async def get_upload(conn: Annotated[connection, Depends(cursor.get_db)]) -> Upload:
+    """Hent nyeste upload."""
+    return get.upload(conn)

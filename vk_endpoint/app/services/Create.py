@@ -1,11 +1,26 @@
+"""create funktioner."""
+
+from psycopg2.extensions import connection
 from psycopg2.extras import execute_values
+
+from app.exceptions import DuplicateStationIdError
 from app.model import Kriterie
 
 
-def file(conn, note: str | None, sommer: bool, kriterier: list[Kriterie]):
+def file(
+    conn: connection,
+    note: str | None,
+    sommer: bool, # noqa: FBT001
+    kriterier: list[Kriterie],
+) -> dict[int, int]:
+    """Opret en ny upload og tilhørende varslingskriterier i databasen."""
     with conn.cursor() as cur:
         cur.execute(
-            "INSERT INTO upload (date, note, sommer) VALUES (CURRENT_DATE, %s, %s) RETURNING id;",
+            (
+                "INSERT INTO upload (date, note, sommer) "
+                "VALUES (CURRENT_DATE, %s, %s) "
+                "RETURNING id;",
+            )
             (note, sommer),
         )
         upload_id = cur.fetchone()[0]
@@ -22,7 +37,8 @@ def file(conn, note: str | None, sommer: bool, kriterier: list[Kriterie]):
 
     for kriterie in kriterier:
         if kriterie.station_id in seen:
-            raise Exception(f"der var dublikeret stations_Id: {kriterie.station_id}")
+            msg = f"der var dublikeret stations_Id: {kriterie.station_id}"
+            raise DuplicateStationIdError(msg)
         seen.add(kriterie.station_id)
 
         values.append(
@@ -38,7 +54,7 @@ def file(conn, note: str | None, sommer: bool, kriterier: list[Kriterie]):
                 getattr(kriterie.vandstand, "fem", None),
                 getattr(kriterie.vandstand, "ti", None),
                 kriterie.station_id,
-            )
+            ),
         )
     with conn.cursor() as cur:
         execute_values(cur, insert_sql, values)

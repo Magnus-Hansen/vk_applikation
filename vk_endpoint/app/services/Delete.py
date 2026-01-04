@@ -1,7 +1,11 @@
+"""funktioner for delete."""
+
 from fastapi import HTTPException
+from psycopg2.extensions import connection
 
 
-def upload(upload_id: int, conn):
+def upload(upload_id: int, conn: connection) -> dict[str, int]:
+    """Slet en upload baseret på upload_id."""
     try:
         with conn.cursor() as cur:
             deleted_upload = 0
@@ -13,14 +17,17 @@ def upload(upload_id: int, conn):
 
         return {"deleted": upload_id}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-def varsling(upload_id: int, station_id: str, conn):
+def varsling(upload_id: int, station_id: str, conn: connection) -> dict[str, int]:
+    """Slet en varsling baseret på upload_id og station_id."""
     try:
         with conn.cursor() as cur:
             cur.execute(
-                "DELETE FROM varslingskriterier WHERE upload_id = %s AND station_id = %s RETURNING upload_id;",
+                "DELETE FROM varslingskriterier "
+                "WHERE upload_id = %s AND station_id = %s "
+                "RETURNING upload_id;",
                 (upload_id, station_id),
             )
             deleted_kriterie = cur.fetchone()
@@ -28,7 +35,10 @@ def varsling(upload_id: int, station_id: str, conn):
             if not deleted_kriterie:
                 raise HTTPException(
                     status_code=404,
-                    detail=f"kunne ikke finde varsling station: {station_id} upload: {upload_id}",
+                    detail=(
+                        f"kunne ikke finde varsling station: {station_id}",
+                        f"upload: {upload_id}",
+                    ),
                 )
 
             cur.execute(
@@ -41,4 +51,4 @@ def varsling(upload_id: int, station_id: str, conn):
                 cur.execute("DELETE FROM upload WHERE id = %s;", (upload_id,))
         return {"deleted": station_id}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e

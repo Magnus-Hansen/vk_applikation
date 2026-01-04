@@ -1,18 +1,26 @@
-from fastapi import APIRouter
-from services import Create
-from fastapi import Depends, HTTPException
+"""Router til håndtering af fil uploads."""
+
+from typing import Annotated
+
 import model
 from db import cursor
+from fastapi import APIRouter, Depends, HTTPException
+from psycopg2.extensions import connection
+from services import create
 
 router = APIRouter()
 
 
 @router.post("/", status_code=201)
-async def post_file(data: model.UploadRequest, conn=Depends(cursor.get_db)):
+async def post_file(
+    data: model.UploadRequest,
+    conn: Annotated[connection, Depends(cursor.get_db)],
+) -> dict[int, int]:
+    """Opretter en ny upload med tilhørende varslingskriterier."""
     try:
-        result = Create.file(conn, data.note, data.sommer, data.kriterier)
+        result = create.file(conn, data.note, data.sommer, data.kriterier)
         conn.commit()
         return result
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

@@ -1,14 +1,20 @@
-from app.model import Kriterie, Upload
+"""Service til opdatering af uploads og varslingskriterier."""
+
 from fastapi import HTTPException
+from psycopg2.extensions import connection
+
+from app.exceptions import UploadNotFoundError, VarslingNotFoundError
+from app.model import Kriterie, Upload
 
 
-def varsling(kriterie: Kriterie, conn):
+def varsling(kriterie: Kriterie, conn: connection) -> dict[str, int]:
+    """Opdatere en eksisterende varsling baseret på upload_id og station_id."""
     try:
         with conn.cursor() as cur:
             cur.execute(
                 """
                 UPDATE varslingskriterier
-                SET 
+                SET
                     "dkhype_1.1" = %s,
                     "dkhype_5" = %s,
                     "dkhype_20" = %s,
@@ -35,14 +41,16 @@ def varsling(kriterie: Kriterie, conn):
                 ),
             )
             if cur.rowcount == 0:
-                raise Exception("No upload found with that ID")
+                msg = "No upload found with that ID"
+                raise VarslingNotFoundError(msg)
         return {"upload": kriterie.id, "station": kriterie.station_id}
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-def upload(upload: Upload, conn):
+def upload(upload: Upload, conn: connection) -> dict[str, int]:
+    """Opdatere en eksisterende upload baseret på upload_id."""
     try:
         with conn.cursor() as cur:
             cur.execute(
@@ -54,8 +62,9 @@ def upload(upload: Upload, conn):
                 (upload.Datetime, upload.note, upload.sommer, upload.id),
             )
             if cur.rowcount == 0:
-                raise Exception("No upload found with that ID")
+                msg = "No upload found with that ID"
+                raise UploadNotFoundError(msg)
 
         return {"upload_id": upload.id}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e

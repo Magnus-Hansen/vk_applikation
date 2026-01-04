@@ -1,28 +1,43 @@
-from fastapi import APIRouter
-from services import Delete
-from fastapi import Depends, HTTPException
+"""Håndtere route for delete."""
+
+from typing import Annotated
+
 from db import cursor
+from fastapi import APIRouter, Depends, HTTPException
+from services import delete
 
 router = APIRouter()
 
 
 @router.delete("/{upload_id}", status_code=200)
-async def delete_upload(upload_id: int, conn=Depends(cursor.get_db)):
+async def delete_upload(
+    upload_id: int,
+    conn: Annotated[any, Depends(cursor.get_db)],
+) -> dict[str, int]:
+    """Sletter upload og alle associeret kriterier."""
     try:
-        results = Delete.upload(upload_id, conn)
+        results = delete.upload(upload_id, conn)
         conn.commit()
         return results
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.delete("/{upload_id}/{station_id}", status_code=204)
-async def delete_varsling(upload_id: int, station_id: str, conn=Depends(cursor.get_db)):
+async def delete_varsling(
+    upload_id: int,
+    station_id: str,
+    conn: Annotated[any, Depends(cursor.get_db)],
+) -> dict[str, int]:
+    """Sletter specifik kriterie.
+
+    Sletter også upload hvis alle kriteier er slettet for den upload.
+    """
     try:
-        results = Delete.varsling(upload_id, station_id, conn)
+        results = delete.varsling(upload_id, station_id, conn)
         conn.commit()
         return results
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

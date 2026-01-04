@@ -1,4 +1,4 @@
-from app.services import Delete, Create
+from app.services import delete, create
 from app.model import Kriterie, Dkhype, Vandstand
 import pytest
 
@@ -6,11 +6,11 @@ import pytest
 class TestClassDelete:
     def test_delete_no_varsling(self, conn):
         with pytest.raises(Exception):
-            Delete.varsling(1, "02001038", conn)
+            delete.varsling(1, "02001038", conn)
 
     def test_delete_no_upload(self, conn):
         with pytest.raises(Exception):
-            Delete.upload(1, conn)
+            delete.upload(1, conn)
 
     def test_delete_varsling(self, conn):
         kriterie1 = Kriterie(
@@ -20,8 +20,8 @@ class TestClassDelete:
             ),
             station_id="02001038",
         )
-        Create.file(conn, None, False, [kriterie1])
-        result = Delete.varsling(1, "02001038", conn)
+        create.file(conn, None, False, [kriterie1])
+        result = delete.varsling(1, "02001038", conn)
         assert result["deleted"] == "02001038"
 
     def test_delete_upload(self, conn):
@@ -32,8 +32,8 @@ class TestClassDelete:
             ),
             station_id="02001038",
         )
-        Create.file(conn, None, False, [kriterie1])
-        result = Delete.upload(1, conn)
+        create.file(conn, None, False, [kriterie1])
+        result = delete.upload(1, conn)
         assert result["deleted"] == 1
 
     def test_delete_varsling_fail(self, conn):
@@ -45,8 +45,8 @@ class TestClassDelete:
                 ),
                 station_id="02001038",
             )
-            Create.file(conn, None, False, [kriterie1])
-            result = Delete.varsling(1, "92001038", conn)
+            create.file(conn, None, False, [kriterie1])
+            result = delete.varsling(1, "92001038", conn)
             assert result["deleted"] == "02001038"
 
     def test_delete_upload_fail(self, conn):
@@ -58,6 +58,6 @@ class TestClassDelete:
                 ),
                 station_id="02001038",
             )
-            Create.file(conn, None, False, [kriterie1])
-            result = Delete.upload(2, conn)
+            create.file(conn, None, False, [kriterie1])
+            result = delete.upload(2, conn)
             assert result["deleted"] == 2

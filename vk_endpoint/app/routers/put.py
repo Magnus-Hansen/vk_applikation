@@ -1,29 +1,41 @@
-from services import Update
-from fastapi import Depends, HTTPException
+"""Router til opdatering af uploads og varslingskriterier."""
+
+from typing import Annotated
+
 import model
-from fastapi import APIRouter
 from db import cursor
+from fastapi import APIRouter, Depends, HTTPException
+from psycopg2.extensions import connection
+from services import update
 
 router = APIRouter()
 
 
 @router.put("/varsling", status_code=200)
-async def update_varsling(kriterie: model.Kriterie, conn=Depends(cursor.get_db)):
+async def update_varsling(
+    kriterie: model.Kriterie,
+    conn: Annotated[connection, Depends(cursor.get_db)],
+) -> dict[str, int]:
+    """Opdatere eksisterende varsling baseret på upload_id og station_id."""
     try:
-        results = Update.varsling(kriterie, conn)
+        results = update.varsling(kriterie, conn)
         conn.commit()
         return results
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @router.put("/upload", status_code=200)
-async def update_upload(upload: model.Upload, conn=Depends(cursor.get_db)):
+async def update_upload(
+    upload: model.Upload,
+    conn: Annotated[connection, Depends(cursor.get_db)],
+) -> dict[str, int]:
+    """Opdatere eksisterende upload baseret på upload_id."""
     try:
-        results = Update.upload(upload, conn)
+        results = update.upload(upload, conn)
         conn.commit()
         return results
     except Exception as e:
         conn.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
