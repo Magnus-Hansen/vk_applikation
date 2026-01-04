@@ -16,11 +16,11 @@ def file(
     """Opret en ny upload og tilhørende varslingskriterier i databasen."""
     with conn.cursor() as cur:
         cur.execute(
-            (
-                "INSERT INTO upload (date, note, sommer) "
-                "VALUES (CURRENT_DATE, %s, %s) "
-                "RETURNING id;",
-            )
+            """
+            INSERT INTO upload (date, note, sommer)
+            VALUES (CURRENT_DATE, %s, %s)
+            RETURNING id;
+            """,
             (note, sommer),
         )
         upload_id = cur.fetchone()[0]
