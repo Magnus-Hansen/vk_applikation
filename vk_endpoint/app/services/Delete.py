@@ -3,6 +3,8 @@
 from fastapi import HTTPException
 from psycopg2.extensions import connection
 
+from app.exceptions import UploadNotFoundError, VarslingNotFoundError
+
 
 def upload(upload_id: int, conn: connection) -> dict[str, int]:
     """Slet en upload baseret på upload_id."""
@@ -13,7 +15,7 @@ def upload(upload_id: int, conn: connection) -> dict[str, int]:
             deleted_upload = cur.rowcount
 
         if deleted_upload == 0:
-            raise HTTPException(404, detail=f"upload: {upload_id} not found")
+            raise UploadNotFoundError(404, detail=f"upload: {upload_id} not found")
 
         return {"deleted": upload_id}
     except Exception as e:
@@ -33,7 +35,7 @@ def varsling(upload_id: int, station_id: str, conn: connection) -> dict[str, int
             deleted_kriterie = cur.fetchone()
 
             if not deleted_kriterie:
-                raise HTTPException(
+                raise VarslingNotFoundError(
                     status_code=404,
                     detail=(
                         f"kunne ikke finde varsling station: {station_id}",

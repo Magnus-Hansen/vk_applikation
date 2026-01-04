@@ -4,7 +4,7 @@ class DuplicateStationIdError(Exception):
     """Rejses når et station_id forekommer mere end én gang."""
 
 class VarslingNotFoundError(Exception):
-    """Rejses når en varsling ikke kan findes til opdatering."""
+    """Rejses når en varsling ikke kan findes."""
 
 class UploadNotFoundError(Exception):
-    """Rejses når en upload ikke kan findes til opdatering."""
+    """Rejses når en upload ikke kan findes."""
