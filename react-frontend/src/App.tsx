@@ -22,6 +22,7 @@ export default function App() {
           Upload JSON
         </button>
         <button
+        id="History"
           onClick={() => setCurrentPage("history")}
           style={{
             padding: "8px 16px",
