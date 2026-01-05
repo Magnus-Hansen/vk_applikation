@@ -23,7 +23,7 @@ class TestClassCreate:
             ),
             station_id="02001038",
         )
-        result = create.file(conn, "dfkojaspasjdpspojdpasdjpo", False, [kriterie1])
+        result = create.file(conn, "test", False, [kriterie1])
         assert result["rows_inserted"] == 1
 
     def test_null_values(self, conn):
@@ -34,7 +34,7 @@ class TestClassCreate:
             ),
             station_id="02001038",
         )
-        result = create.file(conn, "dfkojaspasjdpspojdpasdjpo", False, [kriterie1])
+        result = create.file(conn, "test", False, [kriterie1])
         assert result["rows_inserted"] == 1
 
     def test_incomplete_dkhype(self, conn):
@@ -46,7 +46,7 @@ class TestClassCreate:
                 ),
                 station_id="02001038",
             )
-            create.file(conn, "dfkojaspasjdpspojdpasdjpo", False, [kriterie1])
+            create.file(conn, "test", False, [kriterie1])
 
     def test_incomplete_vandstand(self, conn):
         with pytest.raises(Exception):
@@ -55,7 +55,7 @@ class TestClassCreate:
                 vandstand=Vandstand(**{"1.1": None, "2": None, "5": None, "10": None}),
                 station_id="02001038",
             )
-            result = create.file(conn, "dfkojaspasjdpspojdpasdjpo", False, [kriterie1])
+            result = create.file(conn, "test", False, [kriterie1])
             assert result["rows_inserted"] == 1
 
     def test_stationid_7(self, conn):
@@ -67,7 +67,7 @@ class TestClassCreate:
                 ),
                 station_id="2001038",
             )
-            result = create.file(conn, "dfkojaspasjdpspojdpasdjpo", False, [kriterie1])
+            result = create.file(conn, "test", False, [kriterie1])
             assert result["rows_inserted"] == 1
 
     def test_stationid_9(self, conn):
@@ -79,7 +79,7 @@ class TestClassCreate:
                 ),
                 station_id="902001038",
             )
-            result = create.file(conn, "dfkojaspasjdpspojdpasdjpo", False, [kriterie1])
+            result = create.file(conn, "test", False, [kriterie1])
             assert result["rows_inserted"] == 1
 
     def test_bulk_insert(self, conn):
@@ -108,7 +108,7 @@ class TestClassCreate:
         kriterielist.append(kriterie1)
         kriterielist.append(kriterie2)
         kriterielist.append(kriterie3)
-        result = create.file(conn, "dfkojaspasjdpspojdpasdjpo", False, kriterielist)
+        result = create.file(conn, "test", False, kriterielist)
         assert result["rows_inserted"] == 3
 
     def test_bulk_insert_same_id(self, conn):
@@ -124,4 +124,4 @@ class TestClassCreate:
             kriterielist.append(kriterie1)
             kriterielist.append(kriterie1)
             kriterielist.append(kriterie1)
-            create.file(conn, "dfkojaspasjdpspojdpasdjpo", kriterielist)
+            create.file(conn, "test", kriterielist)
