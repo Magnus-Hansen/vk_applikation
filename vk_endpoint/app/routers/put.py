@@ -2,10 +2,11 @@
 
 from typing import Annotated
 
-import model
-from db import cursor
 from fastapi import APIRouter, Depends, HTTPException
 from psycopg2.extensions import connection
+
+import model
+from db import cursor
 from services import update
 
 router = APIRouter()

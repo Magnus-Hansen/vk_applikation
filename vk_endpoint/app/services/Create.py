@@ -7,12 +7,8 @@ from app.exceptions import DuplicateStationIdError
 from app.model import Kriterie
 
 
-def file(
-    conn: connection,
-    note: str | None,
-    sommer: bool, # noqa: FBT001
-    kriterier: list[Kriterie],
-) -> dict[int, int]:
+def file(conn: connection, note: str | None, sommer: bool, # noqa: FBT001
+    kriterier: list[Kriterie]) -> dict[int, int]:
     """Opret en ny upload og tilhørende varslingskriterier i databasen."""
     with conn.cursor() as cur:
         cur.execute(

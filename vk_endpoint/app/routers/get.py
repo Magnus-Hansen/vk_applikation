@@ -2,12 +2,12 @@
 
 from typing import Annotated
 
-from db import cursor
 from fastapi import APIRouter, Depends
 from psycopg2.extensions import connection
-from services import get
 
 from app.model import Kriterie, Upload
+from db import cursor
+from services import get
 
 router = APIRouter()
 

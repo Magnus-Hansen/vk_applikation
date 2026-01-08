@@ -2,8 +2,9 @@
 
 from typing import Annotated
 
-from db import cursor
 from fastapi import APIRouter, Depends, HTTPException
+
+from db import cursor
 from services import delete
 
 router = APIRouter()
@@ -24,7 +25,7 @@ async def delete_upload(
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
-@router.delete("/{upload_id}/{station_id}", status_code=204)
+@router.delete("/{upload_id}/{station_id}", status_code=200)
 async def delete_varsling(
     upload_id: int,
     station_id: str,
