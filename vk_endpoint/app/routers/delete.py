@@ -14,7 +14,7 @@ router = APIRouter()
 async def delete_upload(
     upload_id: int,
     conn: Annotated[any, Depends(cursor.get_db)],
-) -> dict[str, int]:
+):
     """Sletter upload og alle associeret kriterier."""
     try:
         results = delete.upload(upload_id, conn)
@@ -30,7 +30,7 @@ async def delete_varsling(
     upload_id: int,
     station_id: str,
     conn: Annotated[any, Depends(cursor.get_db)],
-) -> dict[str, int]:
+):
     """Sletter specifik kriterie.
 
     Sletter også upload hvis alle kriteier er slettet for den upload.

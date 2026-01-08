@@ -15,7 +15,7 @@ router = APIRouter()
 @router.get("/all", status_code=200)
 async def get_all_varslinger(
     conn: Annotated[connection, Depends(cursor.get_db)],
-) -> list[Kriterie]:
+):
     """Hent alle varslingskriterier uanset upload."""
     return get.all_varslinger(conn)
 
@@ -23,7 +23,7 @@ async def get_all_varslinger(
 @router.get("/", status_code=200)
 async def get_varslinger(
     conn: Annotated[connection, Depends(cursor.get_db)],
-) -> list[Kriterie]:
+):
     """Hent varslingskriterier for nyeste upload."""
     return get.varslinger(conn)
 
@@ -31,12 +31,12 @@ async def get_varslinger(
 @router.get("/uploads", status_code=200)
 async def get_all_uploads(
     conn: Annotated[connection, Depends(cursor.get_db)],
-) -> list[Upload]:
+):
     """Hent alle uploads."""
     return get.all_uploads(conn)
 
 
 @router.get("/upload", status_code=200)
-async def get_upload(conn: Annotated[connection, Depends(cursor.get_db)]) -> Upload:
+async def get_upload(conn: Annotated[connection, Depends(cursor.get_db)]):
     """Hent nyeste upload."""
     return get.upload(conn)

@@ -6,7 +6,7 @@ from psycopg2.extensions import connection
 from app.exceptions import UploadNotFoundError, VarslingNotFoundError
 
 
-def upload(upload_id: int, conn: connection) -> dict[str, int]:
+def upload(upload_id: int, conn: connection):
     """Slet en upload baseret på upload_id."""
     try:
         with conn.cursor() as cur:
@@ -22,7 +22,7 @@ def upload(upload_id: int, conn: connection) -> dict[str, int]:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-def varsling(upload_id: int, station_id: str, conn: connection) -> dict[str, int]:
+def varsling(upload_id: int, station_id: str, conn: connection):
     """Slet en varsling baseret på upload_id og station_id."""
     try:
         with conn.cursor() as cur:
