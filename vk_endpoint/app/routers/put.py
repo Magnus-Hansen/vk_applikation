@@ -16,7 +16,7 @@ router = APIRouter()
 async def update_varsling(
     kriterie: model.Kriterie,
     conn: Annotated[connection, Depends(cursor.get_db)],
-) -> dict[int, str]:
+):
     """Opdatere eksisterende varsling baseret på upload_id og station_id."""
     try:
         results = update.varsling(kriterie, conn)
@@ -31,7 +31,7 @@ async def update_varsling(
 async def update_upload(
     upload: model.Upload,
     conn: Annotated[connection, Depends(cursor.get_db)],
-) -> dict[str, int]:
+):
     """Opdatere eksisterende upload baseret på upload_id."""
     try:
         results = update.upload(upload, conn)
