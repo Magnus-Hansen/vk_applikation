@@ -101,7 +101,7 @@ export default function JsonPage() {
       }
 
       const result = await res.json();
-      setMessage(`✅ Success! Created item with id: ${result.id}`);
+      setMessage(`✅ Success! Created item with id: ${result.upload_id}`);
     } catch (err) {
       setMessage("❌ Network error: " + String(err));
     }

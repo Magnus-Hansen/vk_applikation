@@ -6,7 +6,7 @@ from psycopg2.extensions import connection
 from app.exceptions import UploadNotFoundError, VarslingNotFoundError
 
 
-def upload(upload_id: int, conn: connection):
+def upload(upload_id: int, conn: connection) -> dict[str: int]:
     """Slet en upload baseret på upload_id."""
     try:
         with conn.cursor() as cur:
@@ -15,14 +15,14 @@ def upload(upload_id: int, conn: connection):
             deleted_upload = cur.rowcount
 
         if deleted_upload == 0:
-            raise UploadNotFoundError(404, detail=f"upload: {upload_id} not found")
+            raise UploadNotFoundError(404, detail=f"upload: {upload_id} not found")  # noqa: TRY301
 
         return {"deleted": upload_id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-def varsling(upload_id: int, station_id: str, conn: connection):
+def varsling(upload_id: int, station_id: str, conn: connection) -> dict[str, str]:
     """Slet en varsling baseret på upload_id og station_id."""
     try:
         with conn.cursor() as cur:
@@ -35,7 +35,7 @@ def varsling(upload_id: int, station_id: str, conn: connection):
             deleted_kriterie = cur.fetchone()
 
             if not deleted_kriterie:
-                raise VarslingNotFoundError(
+                raise VarslingNotFoundError(  # noqa: TRY301
                     status_code=404,
                     detail=(
                         f"kunne ikke finde varsling station: {station_id}",

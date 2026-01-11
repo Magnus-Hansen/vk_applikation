@@ -6,7 +6,7 @@ from psycopg2.extensions import connection
 from app.model import Dkhype, Kriterie, Upload, Vandstand
 
 
-def all_varslinger(conn: connection):
+def all_varslinger(conn: connection) -> list[Kriterie]:
     """Retunere en liste af alle varslinger ved modtagelse af en connection string."""
     try:
         with conn.cursor() as cur:
@@ -48,7 +48,7 @@ def all_varslinger(conn: connection):
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-def varslinger(conn: connection):
+def varslinger(conn: connection) -> list[Kriterie]:
     """Retunere en liste af varslinger for den nyeste upload."""
     try:
         with conn.cursor() as cur:

@@ -7,7 +7,7 @@ from app.exceptions import UploadNotFoundError, VarslingNotFoundError
 from app.model import Kriterie, Upload
 
 
-def varsling(kriterie: Kriterie, conn: connection):
+def varsling(kriterie: Kriterie, conn: connection) -> dict[int, str]:
     """Opdatere en eksisterende varsling baseret på upload_id og station_id."""
     try:
         with conn.cursor() as cur:
@@ -42,14 +42,14 @@ def varsling(kriterie: Kriterie, conn: connection):
             )
             if cur.rowcount == 0:
                 msg = "No upload found with that ID"
-                raise VarslingNotFoundError(msg)
+                raise VarslingNotFoundError(msg)  # noqa: TRY301
         return {"upload": kriterie.id, "station": kriterie.station_id}
     except Exception as e:
         conn.rollback()
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
-def upload(upload: Upload, conn: connection):
+def upload(upload: Upload, conn: connection) -> dict[str, int]:
     """Opdatere en eksisterende upload baseret på upload_id."""
     try:
         with conn.cursor() as cur:
@@ -63,7 +63,7 @@ def upload(upload: Upload, conn: connection):
             )
             if cur.rowcount == 0:
                 msg = "No upload found with that ID"
-                raise UploadNotFoundError(msg)
+                raise UploadNotFoundError(msg)  # noqa: TRY301
 
         return {"upload_id": upload.id}
     except Exception as e:

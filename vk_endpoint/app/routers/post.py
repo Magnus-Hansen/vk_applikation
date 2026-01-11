@@ -16,7 +16,7 @@ router = APIRouter()
 async def post_file(
     data: model.UploadRequest,
     conn: Annotated[connection, Depends(cursor.get_db)],
-):
+) -> dict[str, int]:
     """Opretter en ny upload med tilhørende varslingskriterier."""
     try:
         result = create.file(conn, data.note, data.sommer, data.kriterier)
