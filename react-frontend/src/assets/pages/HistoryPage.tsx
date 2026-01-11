@@ -71,19 +71,14 @@ export default function HistoryPage() {
       
       setAllData(criteriaData);
 
-      // Create a map of upload metadata
-      const uploadMap = new Map<number, Upload>();
-      uploadsData.forEach((upload) => {
-        uploadMap.set(upload.id, upload);
-      });
-
-      // Count criteria per upload and combine with upload metadata
+      // Count criteria per upload
       const countMap = new Map<number, number>();
       criteriaData.forEach((item) => {
         countMap.set(item.id, (countMap.get(item.id) || 0) + 1);
       });
 
-      const uploadsList: GroupedUpload[] = Array.from(uploadMap.values()).map((upload) => ({
+      // Combine upload metadata with criteria counts
+      const uploadsList: GroupedUpload[] = uploadsData.map((upload) => ({
         upload_id: upload.id,
         date: upload.Datetime || "Unknown",
         note: upload.note || "",
